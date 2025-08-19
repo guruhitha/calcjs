@@ -16,7 +16,7 @@ body {
 }
 
 #display {
-  width: 100%;
+  width: 95%;
   padding: 20px;
   font-size: 5rem;
   text-align: right;
@@ -61,5 +61,17 @@ button:active {
 }
 
 .operate-btn:active {
+  background-color: hsl(202, 99%, 40%);
+}
+
+.button-operate {
+  background-color: hsl(202, 99%, 50%);
+}
+
+.button-operate:hover {
+  background-color: hsl(202, 99%, 60%);
+}
+
+.button-operate:active {
   background-color: hsl(202, 99%, 40%);
 }
