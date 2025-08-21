@@ -1,57 +1,70 @@
 const display = document.getElementById("display");
-const digitButtons = document.querySelectorAll('.button-digit');
-const operatorButtons = document.querySelectorAll('.button-operate');
-const clearButton = document.getElementById('clear');
-const equalsButton = document.getElementById('equals');
+const digitButtons = document.querySelectorAll(".button-digit");
+const operatorButtons = document.querySelectorAll(".button-operate");
+const clearButton = document.getElementById("clear");
+const equalsButton = document.getElementById("equals");
+const backspaceButton = document.getElementById("backspace");
+let decimal = document.getElementById("decimals");
 
-let firstNumber = '';
-let secondNumber = '';
+
+let firstNumber = "";
+let secondNumber = "";
 let currentOperator = null;
 let shouldResetDisplay = false;
 
-// Event Listeners
-clearButton.addEventListener('click', clear);
-equalsButton.addEventListener('click', evaluate);
 
-digitButtons.forEach(button => {
-    console.log("insdide event listener digits")
-    button.addEventListener('click', () => appendNumber(button.value));
+clearButton.addEventListener("click", clear);
+equalsButton.addEventListener("click", evaluate);
+backspaceButton.addEventListener("click", backspace)
+
+digitButtons.forEach((number) => {
+    console.log("insdide event listener digits");
+    number.addEventListener("click", () => appendNumber(number.value));
 });
 
-operatorButtons.forEach(button => {
-     console.log("insdide event listener operate")
-    button.addEventListener('click', () => setOperator(button.value));
+operatorButtons.forEach((operator) => {
+    console.log("insdide event listener operate");
+    operator.addEventListener("click", () => setOperator(operator.value));
 });
 
 function appendNumber(number) {
     console.log("inside appendNumber");
-    
-    if (display.value === '0' || shouldResetDisplay) {
+
+    if (display.value === "0" || shouldResetDisplay) {
         resetDisplayScreen();
     }
-    // Prevent multiple decimal points
-    if (number === '.' && display.value.includes('.')) return;
+
+    if (number === "." && display.value.includes(".")) {
+        return decimal.disabled = true;
+    }
+
     display.value += number;
 }
 
 function resetDisplayScreen() {
-    display.value = '';
+    display.value = "";
     shouldResetDisplay = false;
+    decimal.disabled = false;
 }
 
 function clear() {
-    display.value = '0';
-    firstNumber = '';
-    secondNumber = '';
+    display.value = "0";
+    firstNumber = "";
+    secondNumber = "";
     currentOperator = null;
     shouldResetDisplay = false;
+    decimal.disabled = false;
+
 }
 
 function setOperator(operator) {
-    // If an operator is already chosen, evaluate the expression first
+
     if (currentOperator !== null) {
         evaluate();
+        console.log("Inside if in setOperator");
     }
+    console.log("Inside setOperator");
+
     firstNumber = display.value;
     currentOperator = operator;
     shouldResetDisplay = true;
@@ -59,43 +72,88 @@ function setOperator(operator) {
 
 function evaluate() {
     if (currentOperator === null || shouldResetDisplay) return;
-    if (currentOperator === '/' && display.value === '0') {
+
+    if (currentOperator === "/" && display.value === "0") {
         alert("You can't divide by 0!");
         clear();
         return;
     }
+    console.log("Inside in Evaluate  -------------");
+    console.log('First ' + firstNumber);
+
+    console.log('currentOperator ' + currentOperator);
+    console.log('resetDisplay ' + shouldResetDisplay);
+
     secondNumber = display.value;
+    console.log('Second ' + secondNumber);
     const result = operate(currentOperator, firstNumber, secondNumber);
     display.value = roundResult(result);
     currentOperator = null;
     shouldResetDisplay = true;
+    decimal.disabled = false;
+
+    console.log('result ' + result);
 }
 
 function roundResult(number) {
-    return Math.round(number * 1000) / 1000;
+    return Math.round(number * 10) / 10;
 }
 
 function operate(operator, a, b) {
     a = Number(a);
     b = Number(b);
     switch (operator) {
-        case '+':
+        case "+":
             return a + b;
-        case '-':
+        case "-":
             return a - b;
-        case '*':
+        case "*":
             return a * b;
-        case '/':
-            if (b === 0) return null; // Should be caught by evaluate()
+        case "/":
+            if (b === 0) return null;
             return a / b;
         default:
             return null;
     }
 }
 
+function backspace() {
+    let splitNumbers = display.value.split("");
+    splitNumbers.pop();
+    splitNumbers = Number(splitNumbers.join(''));
+    display.value = splitNumbers;
+}
+
+document.addEventListener('keydown', function (event) {
+    const key = event.key;
+
+    if (/[0-9]/.test(key)) {
+
+        appendNumber(key);
+
+    } else if (key === '.') {
+
+        appendNumber(key);
+
+    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+
+        setOperator(key);
+
+    } else if (key === 'Enter' || key === '=') {
+
+        evaluate();
+
+    } else if (key === 'Backspace') {
+
+        backspace();
+
+    } else if (key === 'Escape' || key.toLowerCase() === 'c') {
+        
+        clear();
+    }
+});
 
 // *******************************************************
-
 
 //const display = document.getElementById("display");
 
@@ -104,7 +162,6 @@ function operate(operator, a, b) {
 // let currentOperator = '';
 // let resetDisplay = false;
 
-    
 // function appendDisplay(input) {
 //     if(display.value === '0' || resetDisplay){
 //         display.value = input;

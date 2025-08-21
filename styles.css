@@ -1,11 +1,11 @@
 body {
-  margin: 0;
-  padding: 0;
+  margin: 10;
+  padding: 10;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .calculator {
@@ -75,3 +75,7 @@ button:active {
 .button-operate:active {
   background-color: hsl(202, 99%, 40%);
 }
+
+/* .backspace{
+  grid-column: 2/ span 2;
+} */
